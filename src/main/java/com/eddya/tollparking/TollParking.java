@@ -94,4 +94,17 @@ public class TollParking {
         }
         return pricingPolicy.computeBillInCts(parkingSlotBooker.releaseParkingSlot(parkingSlotId));
     }
+
+    /**
+     * Compute the number of vacant slots for a given {@link ParkingSlotType}.
+     *
+     * @param parkingSlotType the {@link ParkingSlotType}
+     * @return the number of vacant slots having type {@link ParkingSlotType}
+     */
+    public long getNbVacantParkingSlot(ParkingSlotType parkingSlotType) {
+        if (parkingSlotType == null) {
+            throw new IllegalArgumentException("cannot get the number of vacant slots, parkingSlotType field is null.");
+        }
+        return parkingSlotBooker.getNbVacantParkingSlot(parkingSlotType);
+    }
 }

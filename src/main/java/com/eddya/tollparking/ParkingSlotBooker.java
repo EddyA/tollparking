@@ -45,6 +45,8 @@ class ParkingSlotBooker {
      *
      * @param parkingSlotId the parking slot identifier
      * @return the time the parking slot was booked in seconds
+     * @throws ParkingSlotException       if the system failed releasing a booked parking slot (technical issue)
+     * @throws ParkingSlotBookerException if the parking slot identifier is not booked or does not exist
      */
     long releaseParkingSlot(@NotNull String parkingSlotId) throws ParkingSlotBookerException, ParkingSlotException {
 
@@ -60,6 +62,20 @@ class ParkingSlotBooker {
                 throw new ParkingSlotBookerException(
                         "cannot release parking slot " + parkingSlotId + ", it is not booked or does not exist.");
             }
+        }
+    }
+
+    /**
+     * Compute the number of vacant slots for a given {@link ParkingSlotType}.
+     *
+     * @param parkingSlotType the {@link ParkingSlotType}
+     * @return the number of vacant slots having type {@link ParkingSlotType}
+     */
+    long getNbVacantParkingSlot(@NotNull ParkingSlotType parkingSlotType) {
+        synchronized (parkingSlots) {
+            return parkingSlots.stream()
+                    .filter(p -> p.getParkingSlotType().equals(parkingSlotType) && p.isVacant())
+                    .count();
         }
     }
 }

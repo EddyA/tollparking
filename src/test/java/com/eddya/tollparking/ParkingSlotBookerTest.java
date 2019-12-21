@@ -61,4 +61,19 @@ public class ParkingSlotBookerTest implements WithAssertions {
                 .isInstanceOf(ParkingSlotBookerException.class)
                 .hasMessage("cannot release parking slot E201, it is not booked or does not exist.");
     }
+
+    @Test
+    public void getNbVacantParkingSlotShouldWorkAsExpected() throws ParkingSlotException {
+        List<ParkingSlot> parkingSlots = new ArrayList<>();
+        parkingSlots.add(new ParkingSlot("GAZ1", ParkingSlotType.GASOLINE, spiedCurrentTimeSupplier));
+        parkingSlots.add(new ParkingSlot("GAZ2", ParkingSlotType.GASOLINE, spiedCurrentTimeSupplier));
+        ParkingSlotBooker parkingSlotBooker = new ParkingSlotBooker(parkingSlots);
+
+        // check.
+        assertThat(parkingSlotBooker.getNbVacantParkingSlot(ParkingSlotType.GASOLINE)).isEqualTo(2);
+        parkingSlotBooker.getParkingSlot(ParkingSlotType.GASOLINE);
+        assertThat(parkingSlotBooker.getNbVacantParkingSlot(ParkingSlotType.GASOLINE)).isEqualTo(1);
+        parkingSlotBooker.getParkingSlot(ParkingSlotType.GASOLINE);
+        assertThat(parkingSlotBooker.getNbVacantParkingSlot(ParkingSlotType.GASOLINE)).isEqualTo(0);
+    }
 }
